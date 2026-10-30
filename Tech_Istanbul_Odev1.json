@@ -1,0 +1,71 @@
+{
+  "name": "Tech Istanbul - Odev 1",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3ee669ea-f93a-4d70-b646-7b0bd5c19be3",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c57b7b6a-b723-453c-a407-a1246c428dd8",
+              "name": "message",
+              "value": "Merhaba Tech Istanbul!",
+              "type": "string"
+            },
+            {
+              "id": "11548714-f87e-4aec-9fed-e538710258e9",
+              "name": "student",
+              "value": "Selin Pir",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "9d80b171-928d-4294-bd31-b8704fb2e1c3",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "6f87bc85-3f12-477b-8972-373161b7e8f9",
+  "meta": {
+    "instanceId": "c8f504694ce75d08fdbaf8e3634aba2f1b4bbd1474920e229ed1c031ede3230d"
+  },
+  "nodeGroups": [],
+  "id": "YijdeiktmAPiRSq4",
+  "tags": []
+}
