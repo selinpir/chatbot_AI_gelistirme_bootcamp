@@ -1,0 +1,3 @@
+### Ödev 2
+- Tech İstanbul Chatbot ve Konuşma AI Geliştirme Bootcamp'in ikinci hafta ödevi kapsamında, Telegram'da doğal Türkçe mesajlarla stok sorgulama, 
+satış, iade ve stok güncelleme işlemleri yapılabilen yapay zekâ destekli mini ERP asistanı geliştirdik. Google Gemini kullanıcı isteğini yorumladı; JavaScript geçerlilik ve stok kontrollerini yaptı; n8n iş akışını yönetti; Google Sheets ürünleri ve başarılı hareketleri sakladı; Telegram sonucu kullanıcıya iletti. Ödevin sekiz mesajlık zorunlu akışını tamamlayarak Klavye 9, Mouse 8, Monitör 6 stoklarına ve dört başarılı hareket kaydına ulaştık.
