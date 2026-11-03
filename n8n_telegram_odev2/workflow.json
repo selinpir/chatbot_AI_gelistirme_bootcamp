@@ -1,0 +1,523 @@
+{
+  "name": "Tech_Istanbul_Mini_ERP",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {
+          "userIds": "YOUR_TELEGRAM_USER_ID"
+        }
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        -64,
+        80
+      ],
+      "id": "31789a8f-b941-4f6a-ac4b-af781ac81b92",
+      "name": "Telegram Trigger",
+    
+      
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SPREADSHEET_ID",
+          "mode": "list",
+        
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "products",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lVt6XsDr9EAtbk6WnSkLY0plQYs1btoR3gnZ1gEDwzU/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        368,
+        80
+      ],
+      "id": "08efe94f-8ffb-4c71-b0d7-431b400fd430",
+      "name": "Get row(s) in sheet",
+      
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "Sen, Mini ERP stok yönetim sistemi için Türkçe mesajları\nyorumlayan bir yapay zekâ asistanısın.\n\nGÖREVİN:\nKullanıcının Telegram mesajındaki işlemi, ürünü ve\nmiktarı belirleyerek yapılandırılmış JSON üretmek.\n\nDESTEKLENEN İŞLEMLER:\n- query: Mevcut stok miktarını sorgulama\n- sell: Satış nedeniyle stok azaltma\n- add: İade veya yeni mal girişi nedeniyle stok artırma\n- set: Stok miktarını belirtilen değere ayarlama\n- clarify: Eksik veya belirsiz bilgileri sorma\n\nÜRÜNLER:\n- P001: Klavye\n- P002: Mouse\n- P003: Monitör\n\nKURALLAR:\n1. Kullanıcının doğal Türkçe ifadelerini yorumla.\n2. Ürün açıkça belirtilmemişse konuşma hafızasındaki\n   son kesin olarak belirtilmiş ürünü kullan.\n3. Ürün belirlenemiyorsa tahmin etme, açıklama iste.\n4. Satış, iade ve mal girişlerinde miktar pozitif\n   tam sayı olmalıdır.\n5. Set işleminde miktar sıfır veya pozitif tam sayı\n   olabilir.\n6. Stok sorgulamasında quantity null olmalıdır.\n7. Tanınmayan bir ürün açıkça belirtilmişse adını\n   koru ve sku değerini null yap. Ürün uydurma.\n8. Stok değerlerini asla tahmin etme.\n9. Stok hesaplama veya güncelleme yapma.\n10. İşlemin başarılı olduğunu iddia etme.\n11. Yalnızca JSON döndür. Markdown veya ek açıklama yazma.\n\nÇIKTI FORMATI:\n{\n  \"operation\": \"query\",\n  \"sku\": \"P001\",\n  \"product_name\": \"Klavye\",\n  \"quantity\": null,\n  \"needs_clarification\": false,\n  \"question\": null\n}\n\nBelirsizlik varsa:\n- operation = \"clarify\"\n- needs_clarification = true\n- question alanına Türkçe açıklayıcı soru yaz.\n\nÖRNEKLER:\n\n\"Klavye stoğu ne kadar?\"\noperation: query, sku: P001, quantity: null\n\n\"2 tane perakende satış oldu.\"\nÖnceki ürün Klavye ise:\noperation: sell, sku: P001, quantity: 2\n\n\"1 tane iade geldi.\"\nÖnceki ürün Klavye ise:\noperation: add, sku: P001, quantity: 1\n\n\"Mouse ürününden 3 adet yeni ürün geldi.\"\noperation: add, sku: P002, quantity: 3\n\n\"Monitör stoğunu 6 yap.\"\noperation: set, sku: P003, quantity: 6\n\n\"15 tane mouse sattım.\"\noperation: sell, sku: P002, quantity: 15\n\n\"Hoparlör stoğu ne kadar?\"\noperation: query, sku: null,\nproduct_name: \"Hoparlör\", quantity: null\n\nYanıtın yalnızca geçerli bir JSON nesnesi olmalıdır."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        96,
+        80
+      ],
+      "id": "9f89f557-c3d8-418a-9c71-c0b41bbad639",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        48,
+        -96
+      ],
+      "id": "d889b411-48d5-4bd8-950f-e173e0d4a3c0",
+      "name": "Google Gemini Chat Model",
+      
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').first().json.message.chat.id.toString() }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        160,
+        -128
+      ],
+      "id": "332e4f93-8924-4e36-b4a3-170a3a1f3ee4",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        272,
+        -128
+      ],
+      "id": "3ef568ed-f0b0-4b4a-bac9-4a75f3bdfe4b",
+      "name": "Think"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "05dcc86f-dd3d-4f0e-b8ab-f5e7cf4bd76a",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "pending_write",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        96,
+        352
+      ],
+      "id": "d49a8172-f507-47f0-b7f0-bc52523c53fc",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "text": "={{ $json.reply }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        320,
+        528
+      ],
+      "id": "69441541-10db-48ec-bd14-750381898bfa",
+      "name": "Send a text message",
+      
+      
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1lVt6XsDr9EAtbk6WnSkLY0plQYs1btoR3gnZ1gEDwzU",
+          "mode": "list",
+          "cachedResultName": "Mini_ERP",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lVt6XsDr9EAtbk6WnSkLY0plQYs1btoR3gnZ1gEDwzU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "products",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lVt6XsDr9EAtbk6WnSkLY0plQYs1btoR3gnZ1gEDwzU/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "sku": "={{ $('Stok Hesaplayıcı').first().json.sku }}",
+            "product_name": "={{ $json.product_name }}",
+            "stock": "={{ $('Stok Hesaplayıcı').first().json.after }}"
+          },
+          "matchingColumns": [
+            "sku"
+          ],
+          "schema": [
+            {
+              "id": "sku",
+              "displayName": "sku",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "product_name",
+              "displayName": "product_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "stock",
+              "displayName": "stock",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        320,
+        336
+      ],
+      "id": "6b353326-0028-49e2-b3e0-09c625f30210",
+      "name": "Update row in sheet",
+      
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst raw = $('AI Agent').first().json.output;\nconst message = $('Telegram Trigger').first().json.message;\nconst products = $input.all().map(item => item.json);\n\nlet intent;\n\ntry {\n  const cleaned = typeof raw === 'string'\n    ? raw.trim()\n        .replace(/^```(?:json)?\\s*/i, '')\n        .replace(/\\s*```$/, '')\n    : raw;\n\n  intent = typeof cleaned === 'string'\n    ? JSON.parse(cleaned)\n    : cleaned;\n} catch {\n  return [{ json: {\n    status: 'error',\n    reply: 'Mesaj yorumlanamadı. Tekrar dener misin?'\n  }}];\n}\n\nconst result = {\n  operation: intent.operation,\n  sku: intent.sku,\n  quantity: intent.quantity,\n  source_text: message.text,\n  chat_id: message.chat.id\n};\n\nif (intent.needs_clarification || intent.operation === 'clarify') {\n  return [{ json: {\n    ...result,\n    status: 'clarify',\n    reply: intent.question || 'Hangi ürünü kastediyorsun?'\n  }}];\n}\n\nconst product = products.find(p => p.sku === intent.sku);\n\nif (!product) {\n  return [{ json: {\n    ...result,\n    status: 'not_found',\n    reply: 'Ürün bulunamadı.'\n  }}];\n}\n\nconst before = Number(product.stock);\n\nif (!Number.isInteger(before) || before < 0) {\n  throw new Error('Google Sheets stok değeri geçersiz.');\n}\n\nif (intent.operation === 'query') {\n  return [{ json: {\n    ...result,\n    product_name: product.product_name,\n    before,\n    status: 'query',\n    reply: `${product.product_name} stoğu: ${before} adet.`\n  }}];\n}\n\nconst op = intent.operation;\nconst qty = Number(intent.quantity);\n\nif (!['sell', 'add', 'set'].includes(op) ||\n    intent.quantity === null ||\n    !Number.isInteger(qty) ||\n    (op === 'set' ? qty < 0 : qty <= 0)) {\n  return [{ json: {\n    ...result,\n    status: 'invalid',\n    reply: 'Geçerli bir işlem ve miktar belirtmelisin.'\n  }}];\n}\n\nconst after = op === 'sell' ? before - qty\n            : op === 'add' ? before + qty\n            : qty;\n\nif (after < 0) {\n  return [{ json: {\n    ...result,\n    before,\n    status: 'rejected',\n    reply: `Yetersiz stok. Mevcut: ${before} adet.`\n  }}];\n}\n\nreturn [{ json: {\n  ...result,\n  product_name: product.product_name,\n  quantity: qty,\n  before,\n  after,\n  status: 'pending_write',\n  planned_reply: `${product.product_name}: ${before} → ${after}`\n}}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -64,
+        352
+      ],
+      "id": "f3d7d6d9-9d66-4d99-932b-73fa28127aaf",
+      "name": "Stok Hesaplayıcı"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1lVt6XsDr9EAtbk6WnSkLY0plQYs1btoR3gnZ1gEDwzU",
+          "mode": "list",
+          "cachedResultName": "Mini_ERP",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lVt6XsDr9EAtbk6WnSkLY0plQYs1btoR3gnZ1gEDwzU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1341675229,
+          "mode": "list",
+          "cachedResultName": "movements",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lVt6XsDr9EAtbk6WnSkLY0plQYs1btoR3gnZ1gEDwzU/edit#gid=1341675229"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "operation": "={{ $('Stok Hesaplayıcı').first().json.operation }}",
+            "sku": "={{ $('Stok Hesaplayıcı').first().json.sku }}",
+            "quantity": "={{ $('Stok Hesaplayıcı').first().json.quantity }}",
+            "before": "={{ $('Stok Hesaplayıcı').first().json.before }}",
+            "after": "={{ $('Stok Hesaplayıcı').first().json.after }}",
+            "source_text": "={{ $('Stok Hesaplayıcı').first().json.source_text }}",
+            "status": "success"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "operation",
+              "displayName": "operation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "sku",
+              "displayName": "sku",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "quantity",
+              "displayName": "quantity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "before",
+              "displayName": "before",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "after",
+              "displayName": "after",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "source_text",
+              "displayName": "source_text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        512,
+        336
+      ],
+      "id": "5792182f-f9b7-4a17-838c-338bf04b6226",
+      "name": "Append row in sheet",
+      
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "text": "={{ $('Stok Hesaplayıcı').first().json.planned_reply }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        736,
+        336
+      ],
+      "id": "8a63eeda-9a94-476d-b3e2-c6b6b142dcc8",
+      "name": "Telegram - Stok Güncelleme Yanıtı",
+     
+      
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Stok Hesaplayıcı",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Stok Hesaplayıcı": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Stok Güncelleme Yanıtı",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "edc5eac8-b593-43df-a8d5-d3a4bd325a8d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c8f504694ce75d08fdbaf8e3634aba2f1b4bbd1474920e229ed1c031ede3230d"
+  },
+  "nodeGroups": [],
+  "id": "3SD6JGa9iAyb26HY",
+  "tags": []
+}
