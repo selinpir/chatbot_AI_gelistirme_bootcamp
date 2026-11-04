@@ -17,25 +17,20 @@
         80
       ],
       "id": "31789a8f-b941-4f6a-ac4b-af781ac81b92",
-      "name": "Telegram Trigger",
-    
-      
-      }
+      "name": "Telegram Trigger"
     },
     {
       "parameters": {
         "documentId": {
           "__rl": true,
           "value": "YOUR_SPREADSHEET_ID",
-          "mode": "list",
-        
+          "mode": "id"
         },
         "sheetName": {
           "__rl": true,
           "value": "gid=0",
           "mode": "list",
-          "cachedResultName": "products",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lVt6XsDr9EAtbk6WnSkLY0plQYs1btoR3gnZ1gEDwzU/edit#gid=0"
+          "cachedResultName": "products"
         },
         "options": {}
       },
@@ -46,9 +41,7 @@
         80
       ],
       "id": "08efe94f-8ffb-4c71-b0d7-431b400fd430",
-      "name": "Get row(s) in sheet",
-      
-      }
+      "name": "Get row(s) in sheet"
     },
     {
       "parameters": {
@@ -79,9 +72,7 @@
         -96
       ],
       "id": "d889b411-48d5-4bd8-950f-e173e0d4a3c0",
-      "name": "Google Gemini Chat Model",
-      
-      }
+      "name": "Google Gemini Chat Model"
     },
     {
       "parameters": {
@@ -156,27 +147,21 @@
         528
       ],
       "id": "69441541-10db-48ec-bd14-750381898bfa",
-      "name": "Send a text message",
-      
-      
-      }
+      "name": "Send a text message"
     },
     {
       "parameters": {
         "operation": "update",
         "documentId": {
           "__rl": true,
-          "value": "1lVt6XsDr9EAtbk6WnSkLY0plQYs1btoR3gnZ1gEDwzU",
-          "mode": "list",
-          "cachedResultName": "Mini_ERP",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lVt6XsDr9EAtbk6WnSkLY0plQYs1btoR3gnZ1gEDwzU/edit?usp=drivesdk"
+          "value": "YOUR_SPREADSHEET_ID",
+          "mode": "id"
         },
         "sheetName": {
           "__rl": true,
           "value": "gid=0",
           "mode": "list",
-          "cachedResultName": "products",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lVt6XsDr9EAtbk6WnSkLY0plQYs1btoR3gnZ1gEDwzU/edit#gid=0"
+          "cachedResultName": "products"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -241,9 +226,7 @@
         336
       ],
       "id": "6b353326-0028-49e2-b3e0-09c625f30210",
-      "name": "Update row in sheet",
-      
-      }
+      "name": "Update row in sheet"
     },
     {
       "parameters": {
@@ -263,17 +246,14 @@
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "1lVt6XsDr9EAtbk6WnSkLY0plQYs1btoR3gnZ1gEDwzU",
-          "mode": "list",
-          "cachedResultName": "Mini_ERP",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lVt6XsDr9EAtbk6WnSkLY0plQYs1btoR3gnZ1gEDwzU/edit?usp=drivesdk"
+          "value": "YOUR_SPREADSHEET_ID",
+          "mode": "id"
         },
         "sheetName": {
           "__rl": true,
           "value": 1341675229,
           "mode": "list",
-          "cachedResultName": "movements",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lVt6XsDr9EAtbk6WnSkLY0plQYs1btoR3gnZ1gEDwzU/edit#gid=1341675229"
+          "cachedResultName": "movements"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -364,9 +344,7 @@
         336
       ],
       "id": "5792182f-f9b7-4a17-838c-338bf04b6226",
-      "name": "Append row in sheet",
-      
-      }
+      "name": "Append row in sheet"
     },
     {
       "parameters": {
@@ -381,10 +359,7 @@
         336
       ],
       "id": "8a63eeda-9a94-476d-b3e2-c6b6b142dcc8",
-      "name": "Telegram - Stok Güncelleme Yanıtı",
-     
-      
-      }
+      "name": "Telegram - Stok Güncelleme Yanıtı"
     }
   ],
   "pinData": {},
@@ -512,12 +487,6 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "edc5eac8-b593-43df-a8d5-d3a4bd325a8d",
-  "meta": {
-    "templateCredsSetupCompleted": true,
-    "instanceId": "c8f504694ce75d08fdbaf8e3634aba2f1b4bbd1474920e229ed1c031ede3230d"
-  },
   "nodeGroups": [],
-  "id": "3SD6JGa9iAyb26HY",
   "tags": []
 }
